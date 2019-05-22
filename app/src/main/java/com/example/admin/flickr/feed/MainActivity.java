@@ -1,16 +1,17 @@
-package com.example.admin.flickr;
+package com.example.admin.flickr.feed;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.example.admin.flickr.R;
 import com.example.admin.flickr.adapter.PhotosAdapter;
+import com.example.admin.flickr.models.PhotoItem;
+import com.example.admin.flickr.models.Result;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -46,17 +47,17 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView photosNameRV;
     private PhotosAdapter photosAdapter;
     private DividerItemDecoration mDividerItemDecoration;
+    private Call<Result> callConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        handler = new Handler(Looper.getMainLooper());
-
+        //handler = new Handler(Looper.getMainLooper());
         //getPhotosViaHttpUrlConnection();
         // getPhotosViaOkHttp();
+
         getPhotosViaRetrofit();
 
 
@@ -94,27 +95,17 @@ public class MainActivity extends AppCompatActivity {
 
         GitHubService gitHubService = retrofit.create(GitHubService.class);
 
-        gitHubService.repos("flickr.photos.getRecent", API_KEY, "json", 1).enqueue(new Callback <Result>() {
+
+        callConnection = gitHubService.repos("flickr.photos.getRecent", API_KEY, "json", 1);
+
+        callConnection.enqueue(new Callback <Result>() {
             @Override
             public void onResponse(Call <Result> call, Response <Result> response) {
 
                 StringBuilder builder = new StringBuilder();
                 List<PhotoItem> photoItems = response.body().getPhotos().getPhoto();
-
-          /*      for (int i=0;i<photoItems.size();i++){
-                    builder.append(photoItems.get(i).getTitle());
-                }*/
                 initRecyclerView();
                 photosAdapter.setItems(photoItems);
-
-
-                // List<PhotoItem> photoItems=(Result)response.body();
-                // photoItems =(PhotoItem)response.body().getClass(PhotoItem.class);
-
-/*                final String titles = builder.toString();
-                tv.setText(titles);*/
-
-
             }
 
             @Override
@@ -125,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    
 
     private void getPhotosViaOkHttp() {
         final OkHttpClient client = new OkHttpClient();
@@ -239,6 +231,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (showResult != null) {
             handler.removeCallbacks(showResult);
+        }
+        if (callConnection!=null){
+            callConnection.cancel();
         }
     }
 }

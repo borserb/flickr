@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.admin.flickr.PhotoItem;
+import com.example.admin.flickr.models.PhotoItem;
 import com.example.admin.flickr.R;
 
 import java.util.ArrayList;

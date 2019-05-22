@@ -1,4 +1,4 @@
-package com.example.admin.flickr;
+package com.example.admin.flickr.models;
 
 
 import com.google.gson.annotations.SerializedName;

@@ -1,4 +1,4 @@
-package com.example.admin.flickr;
+package com.example.admin.flickr.feed;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
