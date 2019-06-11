@@ -4,11 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="156dp"
     android:id="@+id/photo_item_view"
-    android:background="@color/colorPrimary"
+
     >
-    <TextView
+
+    <ImageView
+        android:background="@color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/photos_tv_id"/>
+        android:id="@+id/image_view"/>
 
 </LinearLayout>
